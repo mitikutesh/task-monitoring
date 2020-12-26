@@ -1,0 +1,11 @@
+﻿{
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information"
+    }
+  },
+  "MonitorSettings": {
+    "OutputFilePath": "C:\\Project\\TaskMonitoring",
+    "ConnectionString": "Data Source=monitoringDB.db"
+  }
+}
