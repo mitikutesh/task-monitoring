@@ -65,6 +65,7 @@ namespace Monitoring
                     services.AddHostedService<HostedMonitoringServiceBase>();
                     services.AddDbContext<MonitoringDbContext>(options =>
                     {
+                        var t = hostContext.Configuration.GetSection("MonitorSettings:ConnectionString");
                         options.UseSqlite(hostContext.Configuration.GetSection("MonitorSettings:ConnectionString")?.Value ?? throw new Exception("Null connection string."));
                     });
                 })
