@@ -9,6 +9,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Monitoring.Data;
+using Monitoring.Data.Interfaces;
+using Monitoring.Data.Services;
 using Monitoring.Services;
 using static Microsoft.Extensions.Hosting.EnvironmentName;
 
@@ -62,7 +64,9 @@ namespace Monitoring
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<HostedMonitoringServiceBase>();
+                    services.AddHostedService<MonitoringBackgroundService>();
+                    
+                    services.AddSingleton<IDataController, DataController>();
                     services.AddDbContext<MonitoringDbContext>(options =>
                     {
                         var t = hostContext.Configuration.GetSection("MonitorSettings:ConnectionString");

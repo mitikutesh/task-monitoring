@@ -5,7 +5,7 @@ using Monitoring.Data.Interfaces;
 
 namespace Monitoring.Data.Services
 {
-    public class DataController :IDataController
+    public class DataController : IDataController
     {
         private readonly MonitoringDbContext _context;
 
@@ -29,6 +29,11 @@ namespace Monitoring.Data.Services
         public async Task<MonitoringConfiguration> ReadConfiguration(Guid id)
         {
            return await _context.MonitoringConfiguration.FindAsync(id);
+        }
+
+        public async Task<MonitoringReport> GetLatestTask(Guid taskId, Guid configId, string taskType)
+        {
+            throw new NotImplementedException();
         }
     }
 }

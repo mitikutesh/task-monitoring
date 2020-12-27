@@ -9,5 +9,6 @@ namespace Monitoring.Data.Interfaces
         Task<bool> CreateConfiguration(MonitoringConfiguration monitorConfig);
         Task<bool> CreateReportAsync(MonitoringReport monitoringReport);
         Task<MonitoringConfiguration> ReadConfiguration(Guid id);
+        Task<MonitoringReport> GetLatestTask(Guid taskId, Guid configId, string taskType);
     }
 }

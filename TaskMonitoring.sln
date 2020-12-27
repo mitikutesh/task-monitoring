@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring", "Monitoring\Mo
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Data", "Monitoring.Data\Monitoring.Data.csproj", "{BA982D2A-36F8-415A-A0F3-42D0CA63445F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Monitoring.Infrastructure", "Monitoring.Infrastructure\Monitoring.Infrastructure.csproj", "{A925AB90-8964-4974-A2D2-E2C6742A3647}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{BA982D2A-36F8-415A-A0F3-42D0CA63445F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BA982D2A-36F8-415A-A0F3-42D0CA63445F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BA982D2A-36F8-415A-A0F3-42D0CA63445F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A925AB90-8964-4974-A2D2-E2C6742A3647}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A925AB90-8964-4974-A2D2-E2C6742A3647}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A925AB90-8964-4974-A2D2-E2C6742A3647}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A925AB90-8964-4974-A2D2-E2C6742A3647}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
