@@ -53,7 +53,6 @@ namespace Monitoring.Services
             }
 
         }
-        
         public bool IsWhiteListed(List<RunOn> runons)
         {
             DateTime now = DateTime.Now;
