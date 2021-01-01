@@ -1,10 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.Extensions.Logging;
+using Monitoring.Data.Entities;
+using Monitoring.Data.Interfaces;
+using Monitoring.Infrastructure.Models;
+using Monitoring.Service.Interfaces;
+using Monitoring.Service.Services;
+using System;
 using System.Linq;
-using System.Text;
+using System.Net;
+using System.Net.Security;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 
-namespace Monitoring.Job.Implementations
+namespace Monitoring.Service.Jobs
 {
     public class CertValidator : ScheduledProcessor, ICertValidator
     {
@@ -16,50 +23,49 @@ namespace Monitoring.Job.Implementations
         }
 
 
-        public override bool IsInitDataOk(ToDoTask task, string configID, string customerID)
+        public override async Task<bool> IsInitDataOk(TasksToDo task, string configID, string customerID)
         {
             bool IsValid(string config)
             {
                 return Guid.TryParse(config, out Guid guid);
             }
 
-            if (string.IsNullOrWhiteSpace(task.Hostname) || string.IsNullOrWhiteSpace(configID) || string.IsNullOrWhiteSpace(customerID) || !task.Hostname.StartsWith("https://"))
+            if (string.IsNullOrWhiteSpace(task.HostName) || string.IsNullOrWhiteSpace(configID) || string.IsNullOrWhiteSpace(customerID) || !task.HostName.StartsWith("https://"))
             {
-                return false;
+                return await Task.FromResult(false);
             }
             if (IsValid(configID) && IsValid(customerID))
-                return true;
+                return await Task.FromResult(true);
 
-            return false;
+            return await Task.FromResult(false);
         }
 
-        public override async Task Process(ToDoTask task, string configID, string customerId, string guid)
+        public override async Task Process(TasksToDo task, string configID, string customerId, string guid)
         {
-            if (!IsDoTaskOk(task, configID, customerId))
+            if (!await IsDoTaskOk(task, configID, customerId))
                 return;
 
-            var url = task.Hostname;
+            var url = task.HostName;
             var res = ValidateCertificateByUrl(url);
 
-            AbMonitorResult abMonitorResult = new AbMonitorResult
+            MonitoringReport abMonitorResult = new MonitoringReport
             {
-                ResultId = new Guid(guid),
+                Id = new Guid(guid),
                 ConfigId = new Guid(configID),
-                TaskId = new Guid(task.Id),
+                TaskId = task.Id,
                 TimeStamp = DateTime.Now,
                 TaskType = task.Type,
                 Result = res ? "Verified" : "failed",
                 Level = 1,
-                CustomerId = new Guid(customerId)
+                ClientId = new Guid(customerId)
             };
-            if (!_dataCtr.CreateResult(abMonitorResult))
-                _logger.LogError("Something went wrong while trying to save the data.");
+            //if (!_dataCtr.CreateResult(abMonitorResult))
+            //    _logger.LogError("Something went wrong while trying to save the data.");
 
             await Task.CompletedTask;
         }
 
 
-        //Test Abilita-1802
         private bool ValidateCertificateByHostName(string hostname)
         {
             X509Store myX509Store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
@@ -119,5 +125,8 @@ namespace Monitoring.Job.Implementations
             _logger.LogError($"Validating certificate {certificate.Issuer} error: {sslPolicyErrors}");
             return false;
         }
+
+
+       
     }
 }

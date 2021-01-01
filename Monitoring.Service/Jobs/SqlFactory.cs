@@ -1,10 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
+using Monitoring.Data.Interfaces;
+using Monitoring.Infrastructure.Models;
+using Monitoring.Service.Interfaces;
+using Monitoring.Service.Services;
+using System;
+using System.Data.SqlClient;
+using System.Diagnostics;
 using System.Threading.Tasks;
 
-namespace Monitoring.Job.Implementations
+namespace Monitoring.Service.Jobs
 {
     public class SqlFactory : ScheduledProcessor, ISqlFactory
     {
@@ -15,26 +20,26 @@ namespace Monitoring.Job.Implementations
             _settings = settings.Value;
         }
 
-        public override bool IsInitDataOk(ToDoTask task, string configID, string customerID)
+        public override async Task<bool> IsInitDataOk(TasksToDo task, string configID, string customerID)
         {
-            bool IsValid(string config)
+            async Task<bool> IsValidAsync(string config)
             {
-                return Guid.TryParse(config, out Guid guid);
+                return await Task.FromResult( Guid.TryParse(config, out Guid guid));
             }
 
             if (string.IsNullOrWhiteSpace(task.ConnectionString) || string.IsNullOrWhiteSpace(configID) || string.IsNullOrWhiteSpace(customerID))
             {
-                return false;
+                return await Task.FromResult(false);
             }
-            if (IsValid(configID) && IsValid(customerID))
+            if (await IsValidAsync(configID) && await IsValidAsync(customerID))
                 return true;
 
             return false;
         }
 
-        public override async Task Process(ToDoTask task, string configID, string customerId, string guid)
+        public override async Task Process(TasksToDo task, string configID, string customerId, string guid)
         {
-            if (!IsDoTaskOk(task, configID, customerId))
+            if (!await IsDoTaskOk(task, configID, customerId))
                 return;
             SqlConnection connection = new SqlConnection(task.ConnectionString);
 
@@ -87,5 +92,6 @@ namespace Monitoring.Job.Implementations
             }
             await Task.CompletedTask;
         }
+
     }
 }

@@ -2,13 +2,13 @@
 using Monitoring.Data.Interfaces;
 using Monitoring.Infrastructure.Helpers;
 using Monitoring.Infrastructure.Models;
-using Monitoring.Job.Interfaces;
+using Monitoring.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Monitoring.Job.Implementations
+namespace Monitoring.Service.Services
 {
     public abstract class BaseTask : IBaseTask
     {
@@ -23,7 +23,7 @@ namespace Monitoring.Job.Implementations
             _dataCtr = dataCtr;
         }
 
-        public abstract Task<bool> StartTask(TasksToDo task, string configID, string clientID, string guid);
+        public abstract Task StartTask(TasksToDo task, string configID, string clientID, string guid);
 
         protected async Task<bool> IsDoTaskOk(TasksToDo task, string configId, string customerId)
         {

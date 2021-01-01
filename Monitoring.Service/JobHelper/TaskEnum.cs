@@ -1,4 +1,4 @@
-﻿namespace Monitoring.Job.Jobs
+﻿namespace Monitoring.Service.JobHelper
 {
     public enum TaskEnum
     {

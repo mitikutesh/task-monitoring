@@ -18,7 +18,7 @@
   <ItemGroup>
     <ProjectReference Include="..\Monitoring.Data\Monitoring.Data.csproj" />
     <ProjectReference Include="..\Monitoring.Infrastructure\Monitoring.Infrastructure.csproj" />
-    <ProjectReference Include="..\Monitoring.Job\Monitoring.Job.csproj" />
+    <ProjectReference Include="..\Monitoring.Service\Monitoring.Service.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,13 +1,13 @@
 ﻿using Microsoft.Extensions.Logging;
 using Monitoring.Data.Interfaces;
 using Monitoring.Infrastructure.Models;
-using Monitoring.Interfaces;
+using Monitoring.Service.Interfaces;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Monitoring.Services
+namespace Monitoring.Service.Services
 {
     public abstract class ActionBase : IActionBase
     {
@@ -20,11 +20,11 @@ namespace Monitoring.Services
             _dataCtr = dataCtr;
         }
         public abstract System.Threading.Tasks.Task StartTask(TasksToDo task, string configID, string customerId, string guid);
-        public abstract bool IsInitDataOk(TasksToDo task, string configID, string customerID);
+        public abstract Task<bool> IsInitDataOk(TasksToDo task, string configID, string customerID);
 
         protected async Task<bool> IsDoTaskOk(TasksToDo task, string configId, string customerId)
         {
-            if (!IsInitDataOk(task, configId, customerId))
+            if (!await IsInitDataOk(task, configId, customerId))
                 return await System.Threading.Tasks.Task.FromResult(false);
 
             var latestTask = await _dataCtr.GetLatestTask(task.Id, new Guid(configId), task.Type);
@@ -79,6 +79,5 @@ namespace Monitoring.Services
             }
             return false;
         }
-
     }
 }

@@ -6,9 +6,9 @@ using Microsoft.Extensions.Logging;
 using Monitoring.Data;
 using Monitoring.Data.Interfaces;
 using Monitoring.Data.Services;
-using Monitoring.Job.Interfaces;
-using Monitoring.Jobs.Interfaces;
-using Monitoring.Services;
+using Monitoring.Service.Interfaces;
+using Monitoring.Service.Jobs;
+using Monitoring.Service.Services;
 using System;
 using System.Diagnostics;
 using System.IO;
@@ -71,11 +71,11 @@ namespace Monitoring
                         var t = hostContext.Configuration.GetSection("MonitorSettings:ConnectionString");
                         options.UseSqlite(hostContext.Configuration.GetSection("MonitorSettings:ConnectionString")?.Value ?? throw new Exception("Null connection string."));
                     });
-                    services.AddSingleton<IHostLifetime, MonitorBase>();
-                    services.AddSingleton<IDataController, DataController>();
-                    services.AddSingleton<IPingFactory, PingFactory>();
-                    services.AddSingleton<ISqlFactory, SqlFactory>();
-                    services.AddSingleton<ITaskFactory, TaskObjFactory>();
+                    //services.AddSingleton<IHostLifetime, MonitorBase>();
+                    services.AddScoped<IDataController, DataController>();
+                    services.AddScoped<IPingFactory, PingFactory>();
+                    services.AddScoped<ISqlFactory, SqlFactory>();
+                    services.AddScoped<ITaskObjFactory, TaskObjFactory>();
 
                 })
                 .ConfigureHostConfiguration(configHost =>

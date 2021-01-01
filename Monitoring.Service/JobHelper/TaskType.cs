@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace Monitoring.Job.Jobs
+namespace Monitoring.Service.JobHelper
 {
     public class TaskType
     {

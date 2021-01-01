@@ -5,7 +5,7 @@ using NCrontab;
 using System;
 using System.Threading.Tasks;
 
-namespace Monitoring.Services
+namespace Monitoring.Service.Services
 {
     public abstract class ScheduledProcessor : ActionBase
     {

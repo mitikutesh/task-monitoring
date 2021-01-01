@@ -5,26 +5,25 @@ using Microsoft.Extensions.Options;
 using Monitoring.Data.Interfaces;
 using Monitoring.Infrastructure.Helpers;
 using Monitoring.Infrastructure.Models;
-using Monitoring.Job.Jobs;
-using Monitoring.Jobs.Interfaces;
+using Monitoring.Service.Interfaces;
+using Monitoring.Service.JobHelper;
 using System;
 using System.Threading.Tasks;
+using ILogger = Microsoft.Extensions.Logging.ILogger;
 
-namespace Monitoring.Services
+namespace Monitoring.Service.Services
 {
     public class MonitoringService : ScopedProcessor
     {
-        private readonly IDataController _dataCtrl;
         private readonly MonitorSettings _settings;
         private readonly ILogger _logger;
         private TaskConfiguration _TaskConfig;
         //https://crontab.guru/every-5-minutes
         //MINUTES HOURS DAYS MONTHS DAYS-OF-WEEK
         //protected override string Schedule => "* * * * 1-5";
-        public MonitoringService(IDataController dataCtrl, IServiceScopeFactory serviceScopeFactory, IOptions<MonitorSettings> settings,
+        public MonitoringService(IServiceScopeFactory serviceScopeFactory, IOptions<MonitorSettings> settings,
             ILogger<ScopedProcessor> logger, IHostApplicationLifetime appLifetime) : base(serviceScopeFactory, logger, appLifetime)
         {
-            _dataCtrl = dataCtrl;
             _settings = settings.Value;
             _logger = logger;
         }
@@ -38,7 +37,7 @@ namespace Monitoring.Services
                 var clientId = _settings.ClientId;
 
                 _logger.LogInformation("Pulling configuration settings from database.");
-                var configData = await _dataCtrl.ReadConfiguration(configId.StringToGuid());
+                var configData = await _dataController.ReadConfiguration(configId.StringToGuid());
                 string jsonConfig = String.Empty;
                 if (configData != null)
                     jsonConfig = configData.Configuration;
@@ -47,9 +46,7 @@ namespace Monitoring.Services
                 {
                     var serviceTimeInms = (_TaskConfig.Service.PollingFrequency.Minutes * 60) * 1000;
 
-                    ITaskFactory taskObjFactory = serviceProvider.GetService<ITaskFactory>();
-
-
+                    ITaskObjFactory taskObjFactory = serviceProvider.GetService<ITaskObjFactory>();
 
                     foreach (var task in _TaskConfig.Tasks)
                     {

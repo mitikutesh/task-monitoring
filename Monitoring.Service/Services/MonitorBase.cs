@@ -1,14 +1,11 @@
 ﻿using Microsoft.Extensions.Hosting;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.ServiceProcess;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Monitoring.Services
+namespace Monitoring.Service.Services
 {
     public class MonitorBase : ServiceBase, IHostLifetime
     {
