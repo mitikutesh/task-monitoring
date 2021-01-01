@@ -66,6 +66,7 @@ namespace Monitoring.Service.Jobs
         }
 
 
+        //Test Abilita-1802
         private bool ValidateCertificateByHostName(string hostname)
         {
             X509Store myX509Store = new X509Store(StoreName.My, StoreLocation.LocalMachine);
