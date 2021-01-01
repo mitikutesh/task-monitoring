@@ -6,6 +6,7 @@ using Microsoft.Extensions.Logging;
 using Monitoring.Data;
 using Monitoring.Data.Interfaces;
 using Monitoring.Data.Services;
+using Monitoring.Infrastructure.Models;
 using Monitoring.Service.Interfaces;
 using Monitoring.Service.Jobs;
 using Monitoring.Service.Services;
@@ -72,16 +73,19 @@ namespace Monitoring
                         options.UseSqlite(hostContext.Configuration.GetSection("MonitorSettings:ConnectionString")?.Value ?? throw new Exception("Null connection string."));
                     });
                     //services.AddSingleton<IHostLifetime, MonitorBase>();
+                    services.Configure<MonitorSettings>(hostContext.Configuration.GetSection("MonitorSettings"));
                     services.AddScoped<IDataController, DataController>();
                     services.AddScoped<IPingFactory, PingFactory>();
                     services.AddScoped<ISqlFactory, SqlFactory>();
                     services.AddScoped<ITaskObjFactory, TaskObjFactory>();
 
+                }).ConfigureAppConfiguration((hostingContext, configApp) =>
+                {
+                    configApp.AddJsonFile("hostSettings.json", optional: true, reloadOnChange: true);
                 })
                 .ConfigureHostConfiguration(configHost =>
                 {
                     configHost.SetBasePath(Directory.GetCurrentDirectory());
-                    configHost.AddJsonFile("hostsettings.json", optional: true, true);
                     configHost.AddEnvironmentVariables(prefix: "PREFIX_");
                 })
                 .ConfigureLogging((hostContext, configLogging) =>

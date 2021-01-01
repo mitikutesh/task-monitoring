@@ -5,7 +5,10 @@
     }
   },
   "MonitorSettings": {
+    "ClientId": "7B0FBCA6-691C-4AB2-8402-6A6362A89FDD",
+    "ConfigId": "0D1FA00D-A245-4F86-9BBB-01447B0BAC56",
     "OutputFilePath": "C:\\Project\\TaskMonitoring",
-    "ConnectionString": "Data Source=monitoringDB.db"
+    "ConnectionString": "Data Source=monitoringDB.db",
+    "Schedule": "*/1 * * * 1-5" //"MINUTES HOURS DAYS MONTHS DAYS-OF-WEEK" //*/1 * * * 1-5
   }
 }
