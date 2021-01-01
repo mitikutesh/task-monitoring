@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net5.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Monitoring.Data\Monitoring.Data.csproj" />
+    <ProjectReference Include="..\Monitoring.Infrastructure\Monitoring.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>

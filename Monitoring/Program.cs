@@ -1,9 +1,4 @@
-﻿using System;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -11,14 +6,20 @@ using Microsoft.Extensions.Logging;
 using Monitoring.Data;
 using Monitoring.Data.Interfaces;
 using Monitoring.Data.Services;
+using Monitoring.Job.Interfaces;
+using Monitoring.Jobs.Interfaces;
 using Monitoring.Services;
+using System;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using static Microsoft.Extensions.Hosting.EnvironmentName;
 
 namespace Monitoring
 {
     internal class Program
     {
-        private static async Task Main(string[] args)
+        private static async System.Threading.Tasks.Task Main(string[] args)
         {
             try
             {
@@ -64,14 +65,18 @@ namespace Monitoring
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddHostedService<MonitoringBackgroundService>();
-                    
-                    services.AddSingleton<IDataController, DataController>();
+                    services.AddHostedService<MonitoringService>();
                     services.AddDbContext<MonitoringDbContext>(options =>
                     {
                         var t = hostContext.Configuration.GetSection("MonitorSettings:ConnectionString");
                         options.UseSqlite(hostContext.Configuration.GetSection("MonitorSettings:ConnectionString")?.Value ?? throw new Exception("Null connection string."));
                     });
+                    services.AddSingleton<IHostLifetime, MonitorBase>();
+                    services.AddSingleton<IDataController, DataController>();
+                    services.AddSingleton<IPingFactory, PingFactory>();
+                    services.AddSingleton<ISqlFactory, SqlFactory>();
+                    services.AddSingleton<ITaskFactory, TaskObjFactory>();
+
                 })
                 .ConfigureHostConfiguration(configHost =>
                 {

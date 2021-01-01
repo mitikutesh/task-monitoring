@@ -1,13 +1,14 @@
-﻿using System;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Monitoring.Data.Interfaces;
 using Monitoring.Infrastructure.Helpers;
 using Monitoring.Infrastructure.Models;
+using Monitoring.Job.Jobs;
+using Monitoring.Jobs.Interfaces;
+using System;
+using System.Threading.Tasks;
 
 namespace Monitoring.Services
 {
@@ -35,7 +36,7 @@ namespace Monitoring.Services
             {
                 var configId = _settings.ConfigId;
                 var clientId = _settings.ClientId;
-                
+
                 _logger.LogInformation("Pulling configuration settings from database.");
                 var configData = await _dataCtrl.ReadConfiguration(configId.StringToGuid());
                 string jsonConfig = String.Empty;
@@ -44,11 +45,11 @@ namespace Monitoring.Services
 
                 if (JsonValidator.IsValidJson(jsonConfig, out _TaskConfig))
                 {
-                    var serviceTimeInms =(_TaskConfig.Service.PollingFrequency.Minutes * 60) * 1000;
+                    var serviceTimeInms = (_TaskConfig.Service.PollingFrequency.Minutes * 60) * 1000;
 
-                    ITaskObjFactory taskObjFactory = serviceProvider.GetService<ITaskObjFactory>();
+                    ITaskFactory taskObjFactory = serviceProvider.GetService<ITaskFactory>();
 
-               
+
 
                     foreach (var task in _TaskConfig.Tasks)
                     {
@@ -57,13 +58,13 @@ namespace Monitoring.Services
                         await toDo.StartTask(task, configId, clientId, null);
                     }
                     //await Task.Delay(serviceTimeInms, stoppingToken);
-                    await Task.Delay(serviceTimeInms); 
+                    await Task.Delay(serviceTimeInms);
                 }
-                
+
             }
             catch (Exception e)
             {
-                _logger.LogError(e,e.Message);
+                _logger.LogError(e, e.Message);
                 throw;
             }
         }

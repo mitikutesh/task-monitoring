@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Monitoring.Data.Entities;
 
 namespace Monitoring.Data
@@ -10,7 +9,7 @@ namespace Monitoring.Data
         public virtual DbSet<MonitoringClient> MonitoringClient { get; set; }
         public virtual DbSet<MonitoringLog> MonitoringLog { get; set; }
         public virtual DbSet<MonitoringReport> MonitoringReport { get; set; }
-        
+
         public MonitoringDbContext()
         {
         }

@@ -1,8 +1,7 @@
-﻿using System;
+﻿using Monitoring.Infrastructure.Models;
 using System.Threading.Tasks;
-using Monitoring.Infrastructure.Models;
 
-namespace Monitoring.Task.Interfaces
+namespace Monitoring.Job.Interfaces
 {
     public interface IBaseTask
     {

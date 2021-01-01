@@ -1,43 +1,36 @@
-﻿using System;
+﻿using Microsoft.Extensions.Logging;
+using Monitoring.Data.Interfaces;
+using Monitoring.Infrastructure.Helpers;
+using Monitoring.Infrastructure.Models;
+using Monitoring.Job.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Monitoring.Infrastructure.Models;
-using Monitoring.Task.Interfaces;
 
-namespace Monitoring.Task.Implementations
+namespace Monitoring.Job.Implementations
 {
     public abstract class BaseTask : IBaseTask
     {
-        public Task<bool> StartTask(TasksToDo task, string configID, string clientID, string guid)
-        {
-            throw new System.NotImplementedException();
-        }
-
-        public async Task<bool> IsInitDataOk(TasksToDo task, string configID, string clientID)
-        {
-            throw new System.NotImplementedException();
-        }
-        
         protected readonly IDataController _dataCtr;
         protected readonly ILogger _logger;
 
-        protected virtual ToDoTask task { get; set; }
+        protected virtual TasksToDo task { get; set; }
 
-        public TaskBase(IDataController dataCtr, ILogger<TaskBase> logger)
+        public BaseTask(IDataController dataCtr, ILogger<TasksToDo> logger)
         {
             _logger = logger;
             _dataCtr = dataCtr;
         }
 
-        public abstract Task StartTask(ToDoTask task, string configID, string customerId, string guid);
+        public abstract Task<bool> StartTask(TasksToDo task, string configID, string clientID, string guid);
 
-        protected bool IsDoTaskOk(ToDoTask task, string configId, string customerId)
+        protected async Task<bool> IsDoTaskOk(TasksToDo task, string configId, string customerId)
         {
-            if (!IsInitDataOk(task, configId, customerId))
+            if (!(await IsInitDataOk(task, configId, customerId)))
                 return false;
 
-            var latestTask = _dataCtr.GetLatestTask(new Guid(task.Id), new Guid(configId), task.Type);
+            var latestTask = await _dataCtr.GetLatestTask(task.Id, configId.StringToGuid(), task.Type);
             if (latestTask?.TimeStamp == null)
                 return true;
 
@@ -49,8 +42,7 @@ namespace Monitoring.Task.Implementations
             _logger.LogInformation($"{task.Type.ToUpper()} with Task ID: [{task.Id}] is uptodate.");
             return false;
         }
-
-        public abstract bool IsInitDataOk(ToDoTask task, string configID, string customerID);
+        public abstract Task<bool> IsInitDataOk(TasksToDo task, string configID, string clientID);
 
         //in a every given day must repeat similar time interval
         public virtual string CreateScheduleTime(Interval interval, List<RunOn> runons)
@@ -88,7 +80,7 @@ namespace Monitoring.Task.Implementations
                         return start <= now && now <= end;
                     }
                     return !(end <= now && now <= start);
-                  
+
                 }
             }
             return false;

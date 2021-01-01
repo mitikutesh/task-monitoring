@@ -1,6 +1,6 @@
-﻿using System;
+﻿using Monitoring.Data.Entities;
+using System;
 using System.Threading.Tasks;
-using Monitoring.Data.Entities;
 
 namespace Monitoring.Data.Interfaces
 {

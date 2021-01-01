@@ -1,6 +1,6 @@
-﻿using System;
-using Monitoring.Infrastructure.Models;
+﻿using Monitoring.Infrastructure.Models;
 using Newtonsoft.Json;
+using System;
 
 namespace Monitoring.Infrastructure.Helpers
 {

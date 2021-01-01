@@ -12,11 +12,13 @@
     <PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="5.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="5.0.0" />
     <PackageReference Include="ncrontab" Version="3.3.1" />
+    <PackageReference Include="System.ServiceProcess.ServiceController" Version="5.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Monitoring.Data\Monitoring.Data.csproj" />
     <ProjectReference Include="..\Monitoring.Infrastructure\Monitoring.Infrastructure.csproj" />
+    <ProjectReference Include="..\Monitoring.Job\Monitoring.Job.csproj" />
   </ItemGroup>
 
 </Project>
