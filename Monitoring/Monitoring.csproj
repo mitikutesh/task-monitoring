@@ -21,4 +21,10 @@
     <ProjectReference Include="..\Monitoring.Service\Monitoring.Service.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="hostSettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

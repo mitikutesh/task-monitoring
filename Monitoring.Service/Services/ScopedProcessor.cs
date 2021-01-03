@@ -9,17 +9,18 @@ namespace Monitoring.Service.Services
 {
     public abstract class ScopedProcessor : MonitoringBackgroundService
     {
-        private readonly IServiceScopeFactory _serviceScopeFactory;
+        //private readonly IServiceProvider _services;
+        public IServiceProvider Services { get; }
         protected  IDataController _dataController;
 
-        public ScopedProcessor(IServiceScopeFactory serviceScopeFactory, ILogger<ScopedProcessor> logger, IHostApplicationLifetime appLifetime)
+        public ScopedProcessor(IServiceProvider services, ILogger<ScopedProcessor> logger, IHostApplicationLifetime appLifetime)
             : base(logger, appLifetime)
         {
-            _serviceScopeFactory = serviceScopeFactory;
+            Services = services;
         }
         protected override async Task ProcessAsync()
         {
-            using (var scope = _serviceScopeFactory.CreateScope())
+            using (var scope = Services.CreateScope())
             {
                 _dataController = scope.ServiceProvider.GetRequiredService<IDataController>();
                 await ProcessInScopeAsync(scope.ServiceProvider);

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -18,11 +19,12 @@ namespace Monitoring.Service.Services
         private readonly MonitorSettings _settings;
         private readonly ILogger _logger;
         private TaskConfiguration _TaskConfig;
+      
         //https://crontab.guru/every-5-minutes
         //MINUTES HOURS DAYS MONTHS DAYS-OF-WEEK
         //protected override string Schedule => "* * * * 1-5";
-        public MonitoringService(IServiceScopeFactory serviceScopeFactory, IOptions<MonitorSettings> settings,
-            ILogger<ScopedProcessor> logger, IHostApplicationLifetime appLifetime) : base(serviceScopeFactory, logger, appLifetime)
+        public MonitoringService(IServiceProvider service, IOptions<MonitorSettings> settings,
+            ILogger<ScopedProcessor> logger, IHostApplicationLifetime appLifetime) : base(service,logger, appLifetime)
         {
             _settings = settings.Value;
             _logger = logger;

@@ -2,7 +2,6 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using Monitoring.Data;
 using Monitoring.Data.Interfaces;
 using Monitoring.Data.Services;
@@ -20,7 +19,7 @@ namespace Monitoring
 {
     internal class Program
     {
-        private static async System.Threading.Tasks.Task Main(string[] args)
+        internal static async System.Threading.Tasks.Task Main(string[] args)
         {
             try
             {
@@ -66,33 +65,22 @@ namespace Monitoring
             Host.CreateDefaultBuilder(args)
                 .ConfigureServices((hostContext, services) =>
                 {
+                    services.Configure<MonitorSettings>(hostContext.Configuration.GetSection(MonitorSettings.MonitorSetting));
                     services.AddHostedService<MonitoringService>();
                     services.AddDbContext<MonitoringDbContext>(options =>
                     {
                         var t = hostContext.Configuration.GetSection("MonitorSettings:ConnectionString");
                         options.UseSqlite(hostContext.Configuration.GetSection("MonitorSettings:ConnectionString")?.Value ?? throw new Exception("Null connection string."));
                     });
-                    //services.AddSingleton<IHostLifetime, MonitorBase>();
-                    services.Configure<MonitorSettings>(hostContext.Configuration.GetSection("MonitorSettings"));
                     services.AddScoped<IDataController, DataController>();
                     services.AddScoped<IPingFactory, PingFactory>();
                     services.AddScoped<ISqlFactory, SqlFactory>();
                     services.AddScoped<ITaskObjFactory, TaskObjFactory>();
 
-                }).ConfigureAppConfiguration((hostingContext, configApp) =>
-                {
-                    configApp.AddJsonFile("hostSettings.json", optional: true, reloadOnChange: true);
                 })
-                .ConfigureHostConfiguration(configHost =>
+                .ConfigureAppConfiguration((hostingContext, configApp) =>
                 {
-                    configHost.SetBasePath(Directory.GetCurrentDirectory());
-                    configHost.AddEnvironmentVariables(prefix: "PREFIX_");
-                })
-                .ConfigureLogging((hostContext, configLogging) =>
-                {
-                    configLogging.ClearProviders();
-                    configLogging.AddConfiguration(hostContext.Configuration.GetSection("Logging"));
-                    configLogging.AddConsole();
+                    configApp.AddJsonFile("hostSettings.json", optional: false, reloadOnChange: true);
                 });
     }
 }

@@ -1,10 +1,8 @@
 ﻿namespace Monitoring.Infrastructure.Models
 {
-    //public record MonitorSettings(string ClientId, string ConfigId, string OutPutFilePath, string ConnectionString,
-    //    string Schedule); ////"MINUTES HOURS DAYS MONTHS DAYS-OF-WEEK"
-
     public class MonitorSettings
     {
+        public const string MonitorSetting = "MonitorSettings";
         public string ClientId { get; set; }
         public string ConfigId { get; set; }
         public string OutputFilePath { get; set; }

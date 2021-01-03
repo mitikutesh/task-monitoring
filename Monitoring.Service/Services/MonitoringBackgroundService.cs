@@ -40,7 +40,7 @@ namespace Monitoring.Service.Services
         public virtual System.Threading.Tasks.Task StartAsync(CancellationToken cancellationToken)
         {
             var text = $"{DateTime.Now.ToString("yyyy-MM-dd HH: mm: ss")}, Monitor Service started." + Environment.NewLine;
-            File.AppendAllText(@"C:\temp\MonitorService\Service.Write.txt", text);
+           // File.AppendAllText(@"C:\temp\MonitorService\Service.Write.txt", text);
             _logger.LogInformation("Monitor service started.");
 
             _executingTask = ExecuteAsync(_stoppingCts.Token);
