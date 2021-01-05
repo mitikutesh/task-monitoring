@@ -24,6 +24,7 @@ namespace Monitoring.Data
             modelBuilder.Entity<MonitoringConfiguration>(e =>
             {
                 e.HasKey(e => e.Id);
+                e.Property(a => a.LastModified).HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
             modelBuilder.Entity<MonitoringClient>(e =>
             {
@@ -36,7 +37,9 @@ namespace Monitoring.Data
             modelBuilder.Entity<MonitoringReport>(e =>
             {
                 e.HasKey(e => e.Id);
+                e.Property(a => a.TimeStamp).HasDefaultValueSql("CURRENT_TIMESTAMP");
             });
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

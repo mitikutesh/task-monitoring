@@ -1,6 +1,9 @@
-﻿using Monitoring.Data.Entities;
+﻿using Microsoft.EntityFrameworkCore;
+using Monitoring.Data.Entities;
 using Monitoring.Data.Interfaces;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace Monitoring.Data.Services
@@ -27,13 +30,10 @@ namespace Monitoring.Data.Services
         }
 
         public async Task<MonitoringConfiguration> ReadConfiguration(Guid id)
-        {
-            return await _context.MonitoringConfiguration.FindAsync(id);
-        }
+         => await _context.MonitoringConfiguration.FindAsync(id);
 
         public async Task<MonitoringReport> GetLatestTask(Guid taskId, Guid configId, string taskType)
-        {
-            throw new NotImplementedException();
-        }
+        => await _context.MonitoringReport.OrderByDescending(a => a.TimeStamp).FirstOrDefaultAsync();
+
     }
 }

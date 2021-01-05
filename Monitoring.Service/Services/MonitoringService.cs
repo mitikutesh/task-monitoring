@@ -39,6 +39,10 @@ namespace Monitoring.Service.Services
                 var clientId = _settings.ClientId;
 
                 _logger.LogInformation("Pulling configuration settings from database.");
+
+                var date = DateTime.Today;
+                var guid = Guid.NewGuid();
+
                 var configData = await _dataController.ReadConfiguration(configId.StringToGuid());
                 string jsonConfig = String.Empty;
                 if (configData != null)
